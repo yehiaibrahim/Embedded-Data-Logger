@@ -1,0 +1,18 @@
+Task 2.1.1 Acquisition_of_range_measurment_data
+
+1 Import necessary libraries and modules (RPI.GPIO, time)
+2 Define GPIO numbering mode
+3 Define pins of Trigger and Echo pin
+4 Define Trigger pin as output
+5 Define Echo pin as input
+6 Print Initialising Sensor
+7 Set Trigger pin to false and wait for 1 sec.
+8 Define the Ultrasonic_function
+9	Print Sending Trigger signal
+10 	Set Trigger for 1ms to TRUE and reset afterwards
+11 	Measure t1 as long as echo pin is FALSE
+12 	Measure t2 as long as echo pin is TRUE
+13 	Calculate pulse duration
+14 	Return pulse duration
+15 Calling the function and inputting the return value into echo time
+16 Printing the measured pulse time

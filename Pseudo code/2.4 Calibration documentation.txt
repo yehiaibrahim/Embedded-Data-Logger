@@ -1,0 +1,108 @@
+1 Import necessary libraries and modules (sys,time, SevenSegment from Adafruit_LED_Backpack, random,
+max 7219 from luma.led_matrix.device, spi, noop from luma.core.interface.serial, canvas from luma.core.render,
+dequeue from collections, wiringpi)
+2 Defining abort function to exit the system when it is called
+    3 Exiting the system
+4 Defining the entire project as a function called my_project
+    5 Initialising the serial interface
+    6 Initialising the max7219 device
+    7 Initialising the list counter (index) 'j' and assigning it a value of 0
+    8 initialising two variables with zeros to get the mean value of 10 pulse readings (random values) 
+    9 defining a time counter of 5 seconds but 5.1 seconds were added allowing for some wasted time allowance
+    10 Setting up the wiringpiGPIO
+    11 Setting up the buffer pin as an output
+    12 Turning off the pull up/ pull down resistance for the pin
+    13 While the time counter is less than 5 seconds
+	14 Turning on the buzzer for 5 seconds
+	16 For i in range (0,10)
+	    17 Setting a random variable to the variable t
+	    18 0.5 second dleay between every reading
+	    19 Summing the readings
+    20 Turning of the buzzer
+    21 Calculating the mean value of the collected readings
+    22 Calculating alpha 
+    23 while 1
+        24 Creating a bar height list with 8 variables and setting all of them to -1
+        25 Assigning the update rate variable a value of 0
+        26 Defining the get num function to ask the user for the update rate time
+            27 Asking the user for the required update rate
+            28 If the value is between 1 and 9
+                29 Return the update rate
+            30 Else
+                31 Return to the function
+        32 Calling the function and assigning the returned value to the update rate variable
+        33 Try
+	    34 While True    
+		35 Assigning a random value between 0 and 1 to echo time
+            	36 Calculating the precentage value p[%]
+            	37 Multiplying the echo time by 200
+		38 Printing the precentage P
+    
+------------------Task 2.1.2 Visualizing the distance measure on the 7-seg------------------
+
+                39 Defining the seven segement function
+                    40 Scaling the echo time and assigning it to scaled distance
+                    41 Converting the scaled distance to string
+                    42 Printing the scaled distance
+                    43 Definning the seven segment object
+                    44 Intialising the seven segment
+                    45 Assigning the scaled distance to seven segment
+                    46 Writing characters on the 7 sevensegment
+                47 Calling the seven segment function to display the distance
+
+-----------------Task 2.1.3 Visulaizing the distance measure on the MLD-------------------------------
+
+                48 Scalling the echo time for the LED Matrix and assigning the value to MLD_distance
+                49 Rounding the MLD_distance and converting the value to integer
+                50 Appending the MLD_distance to the bar height list
+                51 Removing the oldest MLD_distance from the bar height list
+                52 Defining a canvas drawing environment
+                    53 Initialising a for loop with a range of 8
+                        54 Printing the x1, y1, x2 ,y2 values
+                        55 Drawing the point on the LED matrix
+
+---------------------------------------------------------- Tasks 2.3.1 and 2.3.2---------------------------------------------------------
+
+                56 rounding the echo time to first decimal number
+                57 appending the echo_value to the left of the list
+                58 printing the values archived in the list
+                59 Putting the system to sleep for the update rate set by the user
+	60 except KeyboardInterrupt (ctrl + c)
+	    61 asking the user for an input
+	    62 Printing ("The system is paused, press ctrl+c to restart the program or press 1 followed by enter to navigate through the "
+                  "archived data or press 0 followed by enter to exit the system completely ")
+	    63 while 1
+		64 try
+		    65 asigning the input from the user to a variable called response
+		    66 If the user presses 1
+		        67 If j == 100
+			    68 j = 99 , because the size of the list is 100, the heighst index is 99 otherwise the IDE will throw an error if the index is higher than 99
+			    69 Printing ("this is the end of the archived values")
+		        70 Defining a canvas drawing environment
+                            71 Removing all the dots on the LED Matrix
+		        72 Printing the buffer value associated to the index of the list
+		        73 Initialising a variable called segment variable and assigining it the buffer value associated to the index of the list (as a string)
+		        74 Definning the seven segment object
+                        75 Intialising the seven segment
+                        76 Assigning the segment variable to seven segment
+                        77 Writing characters on the 7 sevensegment
+		        78 Initialising a new index for the LED matrix display called mld_index and assigning the list index j to it
+	       	        79 Scalling the list value and rounding it and converting it to an integer
+          		80 Defining a canvas drawing environment
+		    	    81 for i in range (0,8)
+			        82 if mld_index > -1
+				    83 Printing the value of the buffer associated to the mld_index
+				    84 Drawing the point associated to the buffer value on the LED matrix
+				    85 Decreasing the mld_index by 1
+			        86 else
+				    87 Break out of the loop 
+		        88 Increasing the value of the buffer index by 1 to reach the next value when the user presses the associated button again
+		    89 Else if the user presses 0 
+			90 Go to the abort function 
+		    91 except KeyboardInterrupt
+			92 Printing Restarting
+			93 Calling the my_project function to restart the program
+
+94 Calling the my_project function to run the program
+			
+			

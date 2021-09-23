@@ -1,0 +1,91 @@
+1 Import necessary libraries and modules (sys,time, SevenSegment from Adafruit_LED_Backpack, random,
+max 7219 from luma.led_matrix.device, spi, noop from luma.core.interface.serial, canvas from luma.core.render,
+dequeue from collections)
+2 Defining abort function to exit the system when it is called
+    3 Exiting the system
+4 Defining the entire project as a function called my_project
+    5 Initialising the serial interface
+    6 Initialising the max7219 device
+    7 Initialising the list counter (index) 'j' and assigning it a value of 0
+    8 while 1
+        9 Creating a bar height list with 8 variables and setting all of them to -1
+        10 Assigning the update rate variable a value of 0
+        11 Defining the get num function to ask the user for the update rate time
+            12 Asking the user for the required update rate
+            13 If the value is between 1 and 9
+                14 Return the update rate
+            15 Else
+                16 Return to the function
+        17 Calling the function and assigning the returned value to the update rate variable
+        18 Try
+	    19 While True    
+		20 Assigning a random value between 0 and 1 to echo time
+            	21 Printing the echo time
+            	22 Multiplying the echo time by 200
+    
+------------------Task 2.1.2 Visualizing the distance measure on the 7-seg------------------
+
+                23 Defining the seven segement function
+                    24 Scaling the echo time and assigning it to scaled distance
+                    25 Converting the scaled distance to string
+                    26 Printing the scaled distance
+                    27 Definning the seven segment object
+                    28 Intialising the seven segment
+                    29 Assigning the scaled distance to seven segment
+                    30 Writing characters on the 7 sevensegment
+                31 Calling the seven segment function to display the distance
+
+-----------------Task 2.1.3 Visulaizing the distance measure on the MLD-------------------------------
+
+                32 Scalling the echo time for the LED Matrix and assigning the value to MLD_distance
+                33 Rounding the MLD_distance and converting the value to integer
+                34 Appending the MLD_distance to the bar height list
+                35 Removing the oldest MLD_distance from the bar height list
+                36 Defining a canvas drawing environment
+                    37 Initialising a for loop with a range of 8
+                        38 Printing the x1, y1, x2 ,y2 values
+                        39 Drawing the point on the LED matrix
+
+---------------------------------------------------------- Tasks 2.3.1 and 2.3.2---------------------------------------------------------
+
+                40 rounding the echo time to first decimal number
+                41 appending the echo_value to the left of the list
+                42 printing the values archived in the list
+                43 Putting the system to sleep for the update rate set by the user
+	43 except KeyboardInterrupt (ctrl + c)
+	    44 asking the user for an input
+	    45 Printing ("The system is paused, press ctrl+c to restart the program or press 1 followed by enter to navigate through the "
+                  "archived data or press 0 followed by enter to exit the system completely ")
+	    46 while 1
+		47 try
+		    48 asigning the input from the user to a variable called response
+		    49 If the user presses 1
+		        50 If j == 100
+			    51 j = 99 , because the size of the list is 100, the heighst index is 99 otherwise the IDE will throw an error if the index is higher than 99
+			    52 Printing ("this is the end of the archived values")
+		        53 Defining a canvas drawing environment
+                            54 Removing all the dots on the LED Matrix
+		        55 Printing the buffer value associated to the index of the list
+		        56 Initialising a variable called segment variable and assigining it the buffer value associated to the index of the list (as a string)
+		        57 Definning the seven segment object
+                        58 Intialising the seven segment
+                        59 Assigning the segment variable to seven segment
+                        60 Writing characters on the 7 sevensegment
+		        61 Initialising a new index for the LED matrix display called mld_index and assigning the list index j to it
+	       	        62 Scalling the list value and rounding it and converting it to an integer
+          		63 Defining a canvas drawing environment
+		    	    64 for i in range (0,8)
+			        65 if mld_index > -1
+				    66 Printing the value of the buffer associated to the mld_index
+				    67 Drawing the point associated to the buffer value on the LED matrix
+				    68 Decreasing the mld_index by 1
+			        69 else
+				    70 Break out of the loop 
+		        71 Increasing the value of the buffer index by 1 to reach the next value when the user presses the associated button again
+		    72 Else if the user presses 0 
+			73 Go to the abort function 
+		    74 except KeyboardInterrupt
+			75 Printing Restarting
+			76 Calling the my_project function to restart the program
+77 Calling the my_project function to run the program
+			

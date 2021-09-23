@@ -1,0 +1,148 @@
+# import necessary libraries and modules
+import sys
+import time
+from Adafruit_LED_Backpack import SevenSegment
+# This is library import for max7219 compatibility
+from luma.led_matrix.device import max7219
+# SPI communication
+from luma.core.interface.serial import spi, noop
+# Import canvas
+from luma.core.render import canvas
+import random
+from collections import deque
+
+
+# defining the function to exit the system if the user presses the associated button
+def abort():
+    sys.exit()
+
+
+# defining the entire project as a function
+def my_project():
+    serial_interface = spi(port=0, device=1, gpio=noop())
+    # Initialise the MAX7219 device
+    cascaded_var = 1
+    block_orientation_var = 90
+    rotate_var = 0
+    max7219_device = max7219(serial_interface, cascaded=cascaded_var,
+                             block_orientation=block_orientation_var,
+                             rotate=rotate_var)
+    # intialising the list counter (index) variable j and assigning it a value of 0
+    j = 0
+
+    while 1:
+        # initialising the bar height list for the LED matrix function
+        x1 = x2 = x3 = x4 = x5 = x6 = x7 = x8 = -1
+        bar_height = [x1, x2, x3, x4, x5, x6, x7, x8]
+        print("if you want to pause the system during execution press ctrl+c ")
+        update_rate = 0
+        buffer = deque([0] * 100, 100)
+
+        # ---------------------------- Asking the user to set the update rate----------
+        def get_num():
+
+            ask_num = int(input("Please input an update_rate: "))
+            update_rate = ask_num
+            if 0 <= update_rate <= 9:
+                return update_rate
+
+            else:
+                return get_num()
+
+        update_rate = int(get_num())
+
+        try:
+            while True:
+                echo_time = random.random()
+                echo_time = echo_time * 200
+                print("Measured pulse time = ", echo_time, "S")
+
+                # -------------------------------7_seg_visualization---------------------------------------------
+                def seg_display(actual_distance):
+                    # scaling the pulse duration
+                    scaled_distance = echo_time / 2
+                    scaled_distance = str(round(scaled_distance, 1))
+                    print("the scaled pulse duration is", scaled_distance)
+                    # Define a segment object
+                    segment_7SD = SevenSegment.SevenSegment(address=0x70)
+                    # Initialise the 7SD
+                    segment_7SD.begin()
+                    segment_7SD.print_number_str(scaled_distance)  # because the maximum percentage is 100
+                    # Write character
+                    segment_7SD.write_display()
+
+                seg_display(echo_time)
+                # --------------------------------calling the function for the normal system---------------------------
+
+                MLD_distance = echo_time / 200 * 7
+                MLD_distance = int(round(MLD_distance))
+                bar_height.append(MLD_distance)
+                del bar_height[0]
+                # Defining a canvas drawing environment
+                with canvas(max7219_device) as draw:
+                    for i in range(0, 8):
+                        print([i, 7 - bar_height[i], i, 7 - bar_height[i]])
+                        draw.line([i, 7 - bar_height[i], i, 7 - bar_height[i]], fill="white")
+                # -------------------------------------implementation of fifo buffer-------------------------
+                # initialising all of the values of the buffer with zero and the len of the buffer with 100
+
+                echo_time = round(echo_time, 1)
+                buffer.appendleft(echo_time)
+                print(buffer)
+                time.sleep(update_rate)
+
+        # the system will keep running until the user presses ctrl+c, then the system will enter the exception mode
+        except KeyboardInterrupt:
+            print(
+                "The system is paused, press ctrl+c to restart the program or press 1 followed by enter to navigate "
+                "through the "
+                "archived data or press 0 followed by enter to exit the system completely "
+            )
+            while 1:
+                try:
+                    response = input()
+                    if response == '1':
+                        # checking whether the index has reached 100 or not because it will throw an error if the index exceeded the size of the buffer
+                        if j == 100:
+                            # if it has reached 100 it should be assigned 99 so that it is stuck at the last value and the program will indicate that to the user
+                            j = 99
+                            print("this is the end of the archived values")
+                        with canvas(max7219_device) as draw:
+                            draw.rectangle([0, 0, 7, 7], fill='black')
+                        # printing the archived value in the buffer
+                        print('the archived reading is', buffer[j], ' and it is the number', j + 1, 'in the buffer')
+
+                        # printing the archived value in the buffer on the 7 segement
+                        segment_variable = str(buffer[j])
+                        segment_7SD = SevenSegment.SevenSegment(address=0x70)
+                        # Initialise the 7SD
+                        segment_7SD.begin()
+                        segment_7SD.print_number_str(segment_variable)
+                        # Write character
+                        segment_7SD.write_display()
+                        # creating a new index for the MLD so that the buffer main index is not changed
+                        mld_index = j
+                        buffer[mld_index] = buffer[mld_index] / 200 * 7
+                        buffer[mld_index] = int(round(buffer[mld_index]))
+                        # Defining a canvas drawing environment
+                        with canvas(max7219_device) as draw:
+                            for i in range(0, 8):
+                                if mld_index > -1:
+                                    print([i, 7 - buffer[mld_index], i, 7 - buffer[mld_index]])
+                                    draw.line([i, 7 - buffer[mld_index], i, 7 - buffer[mld_index]], fill="white")
+                                    # decrementing the MLD index by 1 so that the previous archived data are shown on the MLD
+                                    mld_index -= 1
+                                else:
+                                    break
+
+                        j += 1
+                    # if the user presses 0 followed by enter, the program will be aborted
+                    elif response == '0':
+                        abort()
+                # if the user presses ctrl+c the program will restart
+                except KeyboardInterrupt:
+                    print("Restarting")
+                    my_project()
+
+
+my_project()

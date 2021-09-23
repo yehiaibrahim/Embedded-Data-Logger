@@ -1,0 +1,40 @@
+1 Import necessary libraries and modules (time, SevenSegment from Adafruit_LED_Backpack, random, 
+max 7219 from luma.led_matrix.device, spi, noop from luma.core.interface.serial, canvas from luma.core.render)
+2 Initialising the serial interface
+3 Initialising the max7219 device
+4 Creating a bar height list with 8 variables and setting all of them to -1
+5 Assigning the update rate variable a value of 0
+6 Defining the get num function to ask the user for the update rate time
+    7 Asking the user for the required update rate 
+    8 If the value is between 1 and 9 
+   	9 Return the update rate
+    10 else
+	11 Return to the function
+12 Calling the function and assigning the returned value to the update rate variable
+13 while 1
+    14 Assigning a random value between 0 and 1 to echo time
+    15 Printing the echo time
+    16 Multiplying the echo time by 200	
+
+------------------Task 2.1.2 Visualizing the distance measure on the 7-seg------------------
+    17 Defining the seven segement function    
+        18 Scaling the echo time and assigning it to scaled distance
+	19 Converting the scaled distance to string
+	20 Printing the scaled distance
+        21 Definning the seven segment object
+    	22 Intialising the seven segment
+	23 Assigning the scaled distance to seven segment
+     	24 Writing characters on the 7 sevensegment
+    25 Calling the seven segment function to display the distance
+-----------------Task 2.1.3 Visulaizing the distance measure on the MLD-------------------------------
+    26 Scalling the echo time for the LED Matrix and assigning the value to MLD_distance
+    27 Rounding the MLD_distance and converting the value to integer
+    28 Appending the MLD_distance to the bar height list
+    29 Printing the length of the bar height
+    30 Removing the oldest MLD_distance from the bar height list
+    31 Printing the bar height list
+    32 Defining a canvas drawing environment
+    	33 Initialising a for loop with a range of 8
+	    34 Printing the x1, y1, x2 ,y2 values 
+	    35 Drawing the point on the LED matrix	
+    36 Putting the system to sleep for the update rate set by the user

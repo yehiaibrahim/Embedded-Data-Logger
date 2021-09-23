@@ -1,0 +1,36 @@
+from Adafruit_LED_Backpack import SevenSegment
+
+# ------------------------------- testing the 7_seg for the remote system -------------------------
+ultrasonic_reading = round(float(input("please enter the desired ultrasonic reading:")), 1)
+
+# checking whether the value of the reading is below 100 or not
+if ultrasonic_reading < 100.0:
+    # if the reading is less than 100 the value shall be converted to float
+        seven_segment_reading = float(ultrasonic_reading)
+
+else:
+    seven_segment_reading = str(ultrasonic_reading)
+
+
+# -------------------------------7_seg_visualization---------------------------------------------
+
+def seg_display(scaled_distance1):
+    # Define a segment object
+    segment_7_sd = SevenSegment.SevenSegment(address=0x70)
+    # Initialise the 7SD
+    segment_7_sd.begin()
+    # checking whether the passed variable to the function is a string or a float
+    if type(seven_segment_reading) == float:
+        if seven_segment_reading > 0:
+            segment_7_sd.print_float(scaled_distance1)
+        else:
+            segment_7_sd.print_number_str('0')
+    else:
+        segment_7_sd.print_number_str('100.0')  # because the maximum percentage is 100
+
+    # Write character
+    segment_7_sd.write_display()
+
+
+# --------------------------------calling the function for the remote system---------------------------
+seg_display(ultrasonic_reading)

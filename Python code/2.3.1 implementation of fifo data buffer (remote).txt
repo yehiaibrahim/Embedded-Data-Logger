@@ -1,0 +1,95 @@
+# import necessary libraries and modules
+import time
+from Adafruit_LED_Backpack import SevenSegment
+# This is library import for max7219 compatibility
+from luma.led_matrix.device import max7219
+# SPI communication
+from luma.core.interface.serial import spi, noop
+# Import canvas
+from luma.core.render import canvas
+import random
+from collections import deque
+
+serial_interface = spi(port=0, device=1, gpio=noop())
+# Initialise the MAX7219 device
+cascaded_var = 1
+block_orientation_var = 90
+rotate_var = 0
+max7219_device = max7219(serial_interface, cascaded=cascaded_var,
+                         block_orientation=block_orientation_var,
+                         rotate=rotate_var)
+# initialising the bar height list for the LED matrix function
+x1 = x2 = x3 = x4 = x5 = x6 = x7 = x8 = -1
+bar_height = [x1, x2, x3, x4, x5, x6, x7, x8]  # this list is used in the implementation of the fifo buffer
+
+update_rate = 0
+
+# initialising all of the values of the buffer with zero and the len of the buffer with 100
+buffer = deque([0] * 100, 100)
+
+
+# ---------------------------- Asking the user to set the update rate----------
+def get_num():
+    ask_num = int(input("Please input an update_rate ranging between 1 and 9: "))
+    update_rate = ask_num
+    if 1 <= update_rate <= 9:
+        return update_rate
+
+    else:
+        return get_num()
+
+
+update_rate = int(get_num())
+
+while True:
+    # setting the value of the echo time between 0 and 1 using random function
+    echo_time = random.random()
+    print("Measured pulse time = ", echo_time, "S")
+    # multiplying the echo_time variable by 200 to make it more realistic
+    echo_time = echo_time * 200
+
+    # -------------------------------7_seg_visualization---------------------------------------------
+    def seg_display(actual_distance):
+        # scaling the pulse duration
+        scaled_distance = echo_time / 2
+        scaled_distance = str(round(scaled_distance, 1))
+        print("the scaled pulse duration is", scaled_distance)
+        # Define a segment object
+        segment_7SD = SevenSegment.SevenSegment(address=0x70)
+        # Initialise the 7SD
+        segment_7SD.begin()
+        segment_7SD.print_number_str(scaled_distance)  # because the maximum percentage is 100
+
+        # Write character
+        segment_7SD.write_display()
+
+
+    seg_display(echo_time)
+    # --------------------------------Visualizing the distance measure on the MLD---------------------------
+    # scaling the value of the echo time to make it between 0 and 7 so that it can be represnted in the MLD matrix
+    MLD_distance = echo_time / 200 * 7
+    MLD_distance = int(MLD_distance)
+    # Appending the MLD_distance to the bar height list
+    bar_height.append(MLD_distance)
+    # Removing the oldest MLD_distance from the bar height list
+    del bar_height[0]
+    # Defining a canvas drawing environment
+    with canvas(max7219_device) as draw:
+        for i in range(0, 8):
+            print([i, 7 - bar_height[i], i, 7 - bar_height[i]])
+            draw.line([i, 7 - bar_height[i], i, 7 - bar_height[i]], fill="white")
+
+    # -------------------------------------implementation of fifo buffer-------------------------
+
+    echo_time = round(echo_time, 1)
+    # appending the last read value to the buffer
+    buffer.appendleft(echo_time)
+    print(buffer)
+
+    # the scaled distance will be appended to the left of the fifo
+    time.sleep(update_rate)
+
+
+
+
+

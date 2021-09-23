@@ -1,0 +1,22 @@
+Task 2.1.1 Acquisition_of_range_measurment_data
+
+1 Import necessary libraries and modules (SevenSegment from Adafruit_LED_Backpack)
+2 Asking the user to input the desired precentage and scaling this precentage to the first decimal point
+3 If the precentage is less than 100
+    4 Convert the precentage to float
+5 Else
+    6 Convert the precentage to string
+
+------------------Task 2.1.2 Visualizing the distance measure on the 7-seg documentation------------------
+7 Defining the seven segement function    
+    8 Definning the seven segment object
+    9 Intialising the seven segment
+    10 If the passed value is float (less than 100)
+	11 If the passed value is > 0
+	    12 Print the passed value on the seven segement
+	13 Else
+	    14 Print 0 on the seven segement
+    15 Else
+	16 Print 100 on the seven segement as the maximum precentage is 100
+    17 Writing characters on the 7 sevensegment
+18 Calling the seven segment function to display the distance

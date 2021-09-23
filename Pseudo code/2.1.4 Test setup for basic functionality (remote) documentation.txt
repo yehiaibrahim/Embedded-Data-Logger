@@ -1,0 +1,32 @@
+1 Import necessary libraries and modules (time, SevenSegment from Adafruit_LED_Backpack, random, 
+max 7219 from luma.led_matrix.device, spi, noop from luma.core.interface.serial, canvas from luma.core.render)
+2 initialising the serial interface
+3 Initialising the max7219 device
+4 Creating a bar height list with 8 variables and setting all of them to -1
+5 while 1
+    6 Assigning a random value between 0 and 1 to echo time
+    7 Printing the echo time
+    8 Multiplying the echo time by 200	
+
+------------------Task 2.1.2 Visualizing the distance measure on the 7-seg------------------
+    9 Defining the seven segement function    
+        10 Scaling the echo time and assigning it to scaled distance
+	12 Converting the scaled distance to string
+	13 Printing the scaled distance
+        14 Definning the seven segment object
+    	15 Intialising the seven segment
+	16 Assigning the scaled distance to seven segment
+     	17 Writing characters on the 7 sevensegment
+    18 Calling the seven segment function to display the distance
+-----------------Task 2.1.3 Visulaizing the distance measure on the MLD-------------------------------
+    19 Scalling the echo time for the LED Matrix and assigning the value to MLD_distance
+    20 Rounding the MLD_distance and converting the value to integer
+    21 Appending the MLD_distance to the bar height list
+    22 Printing the length of the bar height
+    23 Removing the oldest MLD_distance from the bar height list
+    24 Printing the bar height list
+    25 Defining a canvas drawing environment
+    	26 Initialising a for loop with a range of 8
+	    27 Printing the x1, y1, x2 ,y2 values 
+	    28 Drawing the point on the LED matrix	
+    29 Putting the system to sleep for 1 second
